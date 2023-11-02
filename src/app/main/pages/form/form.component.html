@@ -1,0 +1,129 @@
+<body class="container" [ngSwitch]="showInfo">
+	<ng-container *ngSwitchCase="false">
+	<h3>Formulario de carga de datos</h3>
+	<form [formGroup]="form" class="col-12" (ngSubmit)="agregarPersona()" invalidate>
+		<div class="row">
+			<div class="col-12 text-left"><b class="text-secondary">Datos Personales</b></div>
+		</div>
+		<div class="row">
+			<div class="col-12 col-md-6 mb-3">
+				<label for="iapellido">Apellido</label>
+				<input type="text" id="iapellido" formControlName="apellido" class="form-control"
+					placeholder="Ingresa tu apellido" value="" maxlength="100">
+				<div class="text-danger" *ngIf="submitted && form.controls['apellido'].errors?.['required']">
+					Debes informar tu apellido...
+				</div>
+			</div>
+			<div class="col-12 col-md-6 mb-3">
+				<label for="inombre">Nombre</label>
+				<input type="text" id="inombre" formControlName="nombre" class="form-control"
+					placeholder="Ingresa tu nombre" value="" maxlength="255">
+				<div class="text-danger" *ngIf="submitted && form.controls['nombre'].errors?.['required']">
+					Debes informar tu nombre...
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12 col-md-6 mb-3">
+				<label for="iemail">E-mail</label>
+				<input type="email" id="iemail" formControlName="correo" class="form-control" required
+					placeholder="Ingresa tu e-mail" value="" maxlength="255">
+				<div class="text-danger" *ngIf="submitted">
+					<ng-container *ngIf="form.controls['email'].errors?.['required']">
+						Debes informar tu correo...
+					</ng-container>
+					<ng-container *ngIf="form.controls['email'].errors?.['email']">
+						Correo invalido...
+					</ng-container>
+				</div>
+			</div>
+			<div class="col-12 col-md-3 mb-3">
+				<label for="iclave">Ingrese Clave</label>
+				<input type="password" id="iclave" formControlName="clave" class="form-control" required
+					placeholder="Ingresa una clave" value="" maxlength="32">
+				<div class="text-danger" *ngIf="submitted">
+					<ng-container *ngIf="form.controls['clave'].errors?.['required']">
+						Debes informar tu clave...
+					</ng-container>
+					<ng-container *ngIf="form.controls['clave']?.value < 6">
+						Informar contrasena con mas de 6 caracteres...
+					</ng-container>
+				</div>
+			</div>
+			<div class="col-12 col-md-3 mb-3">
+				<label for="iconfirmar_clave">Repetir Clave</label>
+				<input type="password" id="iconfirmar_clave" class="form-control" formControlName="confirmar_clave" required
+					placeholder="Repite la clave" value="" maxlength="32">
+				<div class="text-danger" *ngIf="submitted">
+					<ng-container *ngIf="form.controls['confirmar_clave'].errors?.['required']">
+						Debes informar tu clave...
+					</ng-container>
+					<ng-container *ngIf="form.controls['confirmar_clave']?.value < 6">
+						Informar contrasena con mas de 6 caracteres...
+					</ng-container>
+					<ng-container *ngIf="form.controls['confirmar_clave']?.value != form.controls['clave']?.value">
+						Las contrasenas no son iguales...
+					</ng-container>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12 col-md-2 mb-3">
+				<label for="iGeneroF">G&eacute;nero</label>
+				<div class="form-check" *ngFor="let g of generos">
+					<input type="radio" class="form-check-input" formControlName="codGenero" [value]="g.codGenero" [attr.id]="'iGenero' + g.codGenero">
+					<label class="form-check-label" [attr.for]="'iGenero' + g.codGenero">{{g.nomGenero}}</label>
+				</div>
+			</div>
+			<div class="col-12 col-md-4 mb-3">
+				<label for="ifecha_nacimiento">Fecha de Nac.</label>
+				<input type="date" id="ifecha_nacimiento" formControlName="fechaNacimiento" class="form-control" value="">
+			</div>
+			<div class="col-12 col-md-6 mb-3">
+				<label for="inacionalidad">Nacionalidad</label>
+				<select id="inacionalidad" formControlName="codNacionalidad" class="form-select" >
+					<option value="">Debe seleccionar una nacionalidad</option>
+					<option [value]="n.codNacionalidad" *ngFor="let n of nacionalidades">{{n.nomNacionalidad}}</option>
+				</select>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12 text-left"><b class="text-secondary">Otros Datos</b></div>
+		</div>
+		<div class="row">
+			<div class="col-12 col-md-6 mb-3">
+				<label for="iequipo">Equipo Favorito</label>
+				<select id="iequipo" formControlName="equipos" size="5" multiple class="form-select">
+					<option [value]="e.nroEquipo" *ngFor="let e of equipos">{{e.nomEquipo}}</option>
+				</select>
+			</div>
+			<div class="col-12 col-md-6 mb-3" formArrayName="actividades">
+				<label>Hobbies</label>
+				<div class="form-check" *ngFor="let h of actividades">
+					<input type="checkbox" class="form-check-input" [value]="h.nroActividad" [attr.id]="'i' + h.nroActividad" (change)="setHobby($event)">
+					<!--  -->
+					<label class="form-check-label" [attr.for]="'i' + h.nroActividad">{{h.nomActividad}}</label>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12 mb-3">
+				<label for="iactividades">Otras Actividades</label>
+				<textarea cols="50" rows="5" id="iactividades" formControlName="actividades" class="form-control"
+					placeholder="Mis actividades son..."></textarea>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12">
+				<button type="submit" class="btn btn-success">Guardar</button>
+				<button type="button" class="btn btn-danger ms-2" routerLink="main">Cancelar</button>
+			</div>
+		</div>
+	</form>
+	</ng-container>
+	<ng-container *ngSwitchCase="true">
+		<h3>Gracias! {{form.controls['apellido'].value}}, {{form.controls['nombre'].value}}</h3>
+		<br>
+		<button type="button" class="btn btn-info" (click)="back()"> Volver </button>
+	</ng-container>
+</body>
