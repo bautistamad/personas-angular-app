@@ -13,12 +13,13 @@
         <tbody>
             <tr *ngFor="let persona of personas; let i = index">
                 <td>{{ persona.nroPersona }}</td>
-                <td>{{persona.apellido}}</td>
-                <td>{{persona.nombre}}</td>
-                <td>{{persona.codGenero}}</td>
-                <td>{{persona.correo}}</td>
-                <td>{{persona.codNacionalidad}}</td>
-                <td><button class="btn btn-error">Eliminar</button></td>
+                <td>{{ persona.apellido }}</td>
+                <td>{{ persona.nombre }}</td>
+                <td>{{ persona.codGenero }}</td>
+                <td>{{ persona.correo }}</td>
+                <td>{{ persona.codNacionalidad }}</td>
+                <td><button class="btn btn-info" (click)="editarPersona(persona.nroPersona)"> Editar </button></td>
+                <td><button class="btn btn-danger" (click)="deletePersona(persona.nroPersona)"> Eliminar </button></td>
             </tr>
         </tbody>
     </table>
