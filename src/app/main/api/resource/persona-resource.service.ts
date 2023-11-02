@@ -33,7 +33,7 @@ export class PersonaResourceService extends Resource{
    delete!: IResourceMethodObservable<{nro_persona?: number},IPersona[]>;
 
    @ResourceAction({
-    path: '/{nro_persona}',
+    path: '/{!nro_persona}',
     method: ResourceRequestMethod.Get,
    })
    getPersona!: IResourceMethodObservable<{nro_persona?: number},IPersonadata[]>;

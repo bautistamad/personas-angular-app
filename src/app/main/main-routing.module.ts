@@ -7,7 +7,7 @@ import { FormComponent } from './pages/form/form.component';
 const routes: Routes = [
   { path: '', component: MainComponent, children: [
     { path: '', component: ListComponent },
-    { path: 'agregar', component: FormComponent }
+    { path: 'formulario', component: FormComponent }
   ] }
 ];
 
