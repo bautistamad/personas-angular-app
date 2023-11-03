@@ -50,10 +50,7 @@ export class FormComponent implements OnInit {
     this.loadData();
     this.initForm();
   }
-
-
   private initForm(): void {
-
     if ( this._route.snapshot.params['id'] != undefined ) {
       this.loadPersona(this._route.snapshot.params['id'])
     }
