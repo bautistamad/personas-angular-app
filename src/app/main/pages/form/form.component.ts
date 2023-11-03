@@ -54,6 +54,9 @@ export class FormComponent implements OnInit {
 
   private initForm(): void {
 
+    if ( this._route.snapshot.params['id'] != undefined ) {
+      this.loadPersona(this._route.snapshot.params['id'])
+    }
     this.form = this._fb.group({
       apellido: new FormControl('', [Validators.required]),
       nombre: new FormControl('', [Validators.required]),
@@ -169,6 +172,34 @@ export class FormComponent implements OnInit {
   get actividadesArray(): FormArray {
     return this.form.controls['actividades'] as FormArray;
   }
+  private loadPersona(nroPersona: number): void {
+    // Nota que estamos pasando un objeto con la propiedad `nro_persona`
+    this._personaService.getPersona({ nro_persona: nroPersona }).subscribe({
+      next: (persona: IPersonadata[]) => {
+        console.log(JSON.stringify(persona));
+        this.form.setValue({
+          apellido: persona[0].apellido,
+          nombre: persona[0].nombre,
+          correo: persona[0].correo,
+          clave: persona[0].clave, // Asumiendo que quieres mostrar la clave en el formulario
+          confirmar_clave: [''],
+          codGenero: [this.generos.find(g => g.codGenero == persona[0].codGenero)],
+          fechaNacimiento: persona[0].fechaNacimiento,
+          codNacionalidad: [this.nacionalidades.find(g => g.codNacionalidad == persona[0].codNacionalidad)],
+          equipos: [this.equipos.find(g => g.nroEquipo == persona[0].equipos[0])],
+          actividades: [this.actividades.find(g => g.nroActividad == persona[0].actividades[0])],
+          otrasActividades: ['']
+        });
+
+      },
+      error: (err) => {
+        // Aquí puedes manejar el error
+        console.error('Error al cargar la persona:', err);
+      }
+    });
+  }
+
+
 
 
   setHobby(event: any): void {
