@@ -9,7 +9,6 @@ import { GeneroResourceService } from '../../api/resource/genero-resource.servic
 import { HobbyResourceService } from '../../api/resource/hobby-resource.service';
 import { EquipoResourceService } from '../../api/resource/equipo-resource.service';
 import { PersonaResourceService } from '../../api/resource/persona-resource.service';
-import { IPersona } from 'src/app/core/models/i-persona';
 import { IPersonadata } from 'src/app/core/models/i-personadata';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -28,7 +27,6 @@ export class FormComponent implements OnInit {
   nacionalidades: INacionalidad[] = [];
   submitted: boolean = false;
   showInfo: boolean = false;
-
 
   constructor(private _fb: FormBuilder,
     private _nacionalidadService: NacionalidadResourceService,
