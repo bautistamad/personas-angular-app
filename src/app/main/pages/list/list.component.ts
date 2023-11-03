@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { PersonaResourceService } from '../../api/resource/persona-resource.service';
 import { IPersona } from 'src/app/core/models/i-persona';
 import { IPersonadata } from 'src/app/core/models/i-personadata';
-import { EditService } from 'src/app/core/services/edit.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -15,7 +14,6 @@ export class ListComponent implements OnInit {
   personas: IPersona[] = [];
 
   constructor( private _service: PersonaResourceService,
-                private _editService: EditService,
                 private router: Router){}
 
   ngOnInit(): void {
@@ -34,8 +32,8 @@ export class ListComponent implements OnInit {
   }
 
   editarPersona(nro_persona: number): void { 
-    this._editService.addNumber(nro_persona);
-    this.router.navigate(['/main/formulario']);
+    // this._editService.addNumber(nro_persona);
+    this.router.navigate(['/main/formulario', nro_persona]);
 
   }
 

@@ -10,7 +10,6 @@ import { NacionalidadResourceService } from './api/resource/nacionalidad-resourc
 import { GeneroResourceService } from './api/resource/genero-resource.service';
 import { HobbyResourceService } from './api/resource/hobby-resource.service';
 import { EquipoResourceService } from './api/resource/equipo-resource.service';
-import { EditService } from '../core/services/edit.service';
 
 @NgModule({
   declarations: [
@@ -30,7 +29,6 @@ import { EditService } from '../core/services/edit.service';
     GeneroResourceService,
     HobbyResourceService,
     EquipoResourceService,
-    EditService
   ]
 })
 export class MainModule { }

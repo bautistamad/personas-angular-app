@@ -11,9 +11,7 @@ import { EquipoResourceService } from '../../api/resource/equipo-resource.servic
 import { PersonaResourceService } from '../../api/resource/persona-resource.service';
 import { IPersona } from 'src/app/core/models/i-persona';
 import { IPersonadata } from 'src/app/core/models/i-personadata';
-import { Router } from '@angular/router';
-import { EditService } from 'src/app/core/services/edit.service';
-import { Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 @Component({
@@ -22,61 +20,53 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./form.component.css']
 })
 export class FormComponent implements OnInit {
-  
+
   form!: FormGroup;
-  // Consultar porque sin esto no funciona ( = [] )
   generos: IGenero[] = [];
   equipos: IEquipo[] = [];
   actividades: IHobby[] = [];
   nacionalidades: INacionalidad[] = [];
   submitted: boolean = false;
   showInfo: boolean = false;
-  private _suscription!: Subscription;
 
-  nroPersona!: number;
-  
+
   constructor(private _fb: FormBuilder,
     private _nacionalidadService: NacionalidadResourceService,
     private _generoService: GeneroResourceService,
     private _hobbyService: HobbyResourceService,
     private _equipoService: EquipoResourceService,
     private _personaService: PersonaResourceService,
-    private router: Router,
-    private _service: EditService) {
-      
-    }
+    private _route: ActivatedRoute,
+    //fix
+    private router: Router) {
+
+  }
 
   ngOnInit(): void {
-    this.initForm();
+    // Consultar porque sin esto no funciona
+    // this.nacionalidades = [];
+    this._route.snapshot.params['id']
+    console.log(    this._route.snapshot.params['id'] );
     this.loadData();
-      this._suscription = this._service.getObservable().subscribe((_nroPersona: number) => {
-        this.nroPersona = _nroPersona
-        console.log("Me llego esta persona " + this.nroPersona);
-        this.loadPersona(this.nroPersona);
-      })
-    }
+    this.initForm();
+  }
 
 
   private initForm(): void {
-    // if( this.nroPersona != undefined ){
-      // this.loadPersona(this.nroPersona);
-      // console.log("init form CON persona" + this.nroPersona);
-    // }else{
-      // console.log("init form SIN persona");
-      this.form = this._fb.group({
-        apellido: new FormControl('', [Validators.required]),
-        nombre: new FormControl('', [Validators.required]),
-        correo: new FormControl('', [Validators.required, Validators.email]),
-        clave: new FormControl('', [Validators.required]),
-        confirmar_clave: new FormControl('', [Validators.required]),
-        codGenero: [this.generos.find(g => g.checked)?.codGenero],
-        fechaNacimiento: [''],
-        codNacionalidad: [this.nacionalidades.find(g => g.selected)?.codNacionalidad],
-        equipos: [''],
-        actividades: this._fb.array([]),
-        otrasActividades: [''],
-      });
-    // }
+
+    this.form = this._fb.group({
+      apellido: new FormControl('', [Validators.required]),
+      nombre: new FormControl('', [Validators.required]),
+      correo: new FormControl('', [Validators.required, Validators.email]),
+      clave: new FormControl('', [Validators.required]),
+      confirmar_clave: new FormControl('', [Validators.required]),
+      codGenero: [this.generos.find(g => g.checked)?.codGenero],
+      fechaNacimiento: [''],
+      codNacionalidad: [this.nacionalidades.find(g => g.selected)?.codNacionalidad],
+      equipos: [''],
+      actividades: this._fb.array([]),
+      otrasActividades: [''],
+    });
   }
 
   listarNacionalidades(): void {
@@ -115,6 +105,7 @@ export class FormComponent implements OnInit {
     })
   }
 
+
   listarEquipos(): void {
     this._equipoService.get().subscribe({
       next: (equipos: IEquipo[]) => {
@@ -142,49 +133,20 @@ export class FormComponent implements OnInit {
         },
         error: (error) => {
           console.log(error)
-          // console.log(JSON.stringify(this.form.value));
           console.log("Insercion fallida");
         }
       })
     }
   }
 
+
   private loadData() {
+
     this.listarNacionalidades();
     this.listarGeneros();
     this.listarHobbies();
     this.listarEquipos();
   }
-
-  private loadPersona(nroPersona: number): void {
-    // Nota que estamos pasando un objeto con la propiedad `nro_persona`
-    this._personaService.getPersona({ nro_persona: nroPersona }).subscribe({
-      next: (persona: IPersonadata[]) => {
-        // Aquí puedes manejar los datos de la persona
-        console.log(JSON.stringify(persona));
-
-        this.form.setValue({
-          apellido: persona[0].apellido,
-          nombre: persona[0].nombre,
-          correo: persona[0].correo,
-          clave: persona[0].clave, // Asumiendo que quieres mostrar la clave en el formulario
-          confirmar_clave: [''],
-          codGenero: [this.generos.find(g => g.codGenero == persona[0].codGenero)],
-          fechaNacimiento: persona[0].fechaNacimiento,
-          codNacionalidad: [this.nacionalidades.find(g => g.codNacionalidad == persona[0].codNacionalidad)],
-          equipos: [this.equipos.find(g => g.nroEquipo == persona[0].equipos[0])],
-          actividades: [this.actividades.find(g => g.nroActividad == persona[0].actividades[0])],
-          otrasActividades: ['']
-        });
-
-      },
-      error: (err) => {
-        // Aquí puedes manejar el error
-        console.error('Error al cargar la persona:', err);
-      }
-    });
-  }
-  
 
   showData(): void {
     this.submitted = true;

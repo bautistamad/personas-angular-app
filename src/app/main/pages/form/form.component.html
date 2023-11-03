@@ -29,10 +29,10 @@
 				<input type="email" id="iemail" formControlName="correo" class="form-control" required
 					placeholder="Ingresa tu e-mail" value="" maxlength="255">
 				<div class="text-danger" *ngIf="submitted">
-					<ng-container *ngIf="form.controls['email'].errors?.['required']">
+					<ng-container *ngIf="form.controls['correo'].errors?.['required']">
 						Debes informar tu correo...
 					</ng-container>
-					<ng-container *ngIf="form.controls['email'].errors?.['email']">
+					<ng-container *ngIf="form.controls['correo'].errors?.['correo']">
 						Correo invalido...
 					</ng-container>
 				</div>
